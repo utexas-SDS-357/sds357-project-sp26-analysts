@@ -4,7 +4,8 @@ import numpy as np
 from collections import Counter
 from scipy import stats
 
-df = pd.read_csv("traffic_analysis.csv")
+# df = pd.read_csv("traffic_analysis.csv")
+df = pd.read_csv("traffic_analysis_grouped_vio.csv")
 
 # replacing nan values of citation_issued with False
 df["citation_issued"] = df["citation_issued"].astype("boolean")   # nullable boolean dtype
@@ -13,91 +14,57 @@ df["citation_issued"] = df["citation_issued"].fillna(False)
 # print(np.mean(df['citation_issued']))
 
 
-# MAKING VIOLATION FREQUENCY BAR GRAPH
-#
-counts_violation = Counter(df['violation'])
-N = 10 # Take the top N most common
-most_common = counts_violation.most_common(N)  # list of (value, count)
-# print(most_common)
 
-labels = [k for k, v in most_common]
-freqs  = [v for k, v in most_common]
-x = np.arange(len(labels))         # numeric positions 0,1,2,...
+# MAKING HISTOGRAM OF DISTRIBUTION OF CITATION RATES IN EACH COMMUNITY AREA
 
+# Compute citation rate per community area
+citation_rates = df.groupby('community_area_id')['citation_issued'].mean()
+
+# Define bin edges explicitly
+bins = np.linspace(citation_rates.min(), citation_rates.max(), 21)
+
+# Plot histogram
 plt.figure(figsize=(10, 6))
-plt.barh(labels, freqs)
-plt.xlabel('Frequency', fontsize=15)
-plt.ylabel('Violation Type', fontsize=15)
-plt.yticks(fontsize=9)
-plt.title('10 Most Common Violations', fontsize=16)
+plt.hist(citation_rates, edgecolor='black', bins=bins)
+plt.xlabel('Citation Rate', fontsize=13)
+plt.ylabel('Number of Community Areas', fontsize=13)
+# plt.xticks(bins[::5], rotation=0, fontsize=8)
+plt.title('Distribution of Citation Rates Across Community Areas', fontsize=16)
 plt.tight_layout()
 plt.show()
-#
 
 
-# MAKING RACE FREQUENCY BAR GRAPH
-#
-# counts_race = Counter(df['subject_race'].dropna())
-# exclude = ['other', 'unknown']
-# for cat in exclude:
-#     counts_race.pop(cat, None)
-#
-# items = sorted(counts_race.items(), key=lambda x: x[1], reverse=True)
-# labels_race = [k for k, v in items]
-# freqs_race  = [v for k, v in items]
-#
-# x = np.arange(len(labels_race))
-# fig, ax = plt.subplots(figsize=(10,6))
-# ax.bar(x, freqs_race, align="center")
-# ax.set_xticks(x)
-# ax.set_xticklabels(labels_race, ha="center", fontsize=13)
-# ax.set_xlabel("Race", fontsize=15)
-# ax.set_ylabel("Frequency of Stops", fontsize=15)
-# ax.set_title("Stop Frequency by Driver Race", fontsize=16)
-# fig.tight_layout()
-# plt.show()
+
+# MAKING VIOLATION CATEGORY STOP COUNT FREQUENCY BAR GRAPH
+
+# Count and sort violations high to low
+vio_counts = df['grouped_vio'].value_counts().sort_values(ascending=False)
+
+# Plot
+plt.figure(figsize=(10, 6))
+plt.barh(vio_counts.index, vio_counts.values)
+plt.xlabel('Frequency', fontsize=13)
+plt.ylabel('Violation Category', fontsize=13)
+plt.title('Stop Frequency by Violation Type', fontsize=16)
+plt.xticks(fontsize=9)
+plt.tight_layout()
+plt.show()
 
 
-# MAKING GROUPED BAR CHART OF CITATION RATE BY RACE
-#
-# compute citation rate by race
-# citation_rates = df.groupby('subject_race')['citation_issued'].mean().sort_values(ascending=False)
-# citation_rates = citation_rates.drop(['other', 'unknown'])
-#
-# # plot grouped bar chart
-# plt.figure(figsize=(10, 6))
-# citation_rates.plot(kind='bar')
-#
-# plt.xlabel('Driver Race', fontsize=15)
-# plt.ylabel('Citation Rate', fontsize=15)
-# plt.title('Citation Rate by Driver Race', fontsize=16)
-# plt.xticks(rotation = 0, ha='center', fontsize=13)
-# plt.ylim(0, 0.6)
-# plt.tight_layout()
-# plt.show()
+# MAKING BAR CHART OF CITATION RATE BY VIOLATION CATEGORY
 
-# CREATING PREDICTOR CORRELATIONS AND SIGNIFICANCES FOR STOP COUNT
-#
-# stop_counts = df.groupby('community_area_id').size().reset_index(name='stop_count')
-# area_info = df.groupby('community_area_id')[
-#     ['drug_abuse', 'major_crime', 'public_crime', 'violent_crime', 'economic_diversity_index', 'hardship_index', 'median_household_income', 'poverty_rate', 'foreign_born', 'limited_english_proficiency', 'population']
-# ].first().reset_index()
-# merged = stop_counts.merge(area_info, on='community_area_id')
-#
-#
-# predictors = ['drug_abuse', 'major_crime', 'public_crime', 'violent_crime', 'economic_diversity_index', 'hardship_index', 'median_household_income', 'poverty_rate', 'foreign_born', 'limited_english_proficiency', 'population']
-#
-#
-# results = []
-# for col in predictors:
-#     slope, intercept, r_value, p_value, std_err = stats.linregress(merged[col], merged['stop_count'])
-#     results.append({
-#         'Predictor': col,
-#         'Slope': round(slope, 4),
-#         'R²': round(r_value**2, 4),
-#         'P-value': f'{p_value:.4e}'
-#     })
-#
-# results_df = pd.DataFrame(results)
-# print(results_df.to_string(index=False))
+# Compute citation rate per violation type
+citation_rate_vio = df.groupby('grouped_vio')['citation_issued'].mean().sort_values(ascending=False)
+
+# Plot horizontal bar chart
+plt.figure(figsize=(10, 6))
+plt.barh(citation_rate_vio.index, citation_rate_vio.values)
+plt.xlabel('Citation Rate', fontsize=13)
+plt.ylabel('Violation Category', fontsize=13)
+plt.title('Citation Rate by Violation Type', fontsize=16)
+plt.yticks(rotation=0, fontsize=9)
+plt.tight_layout()
+plt.show()
+
+
 
