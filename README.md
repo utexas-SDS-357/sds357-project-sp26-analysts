@@ -11,5 +11,4 @@ This project requires three datasets:
 ## Data Wrangling
 
 - `data_wrangling/data_wrangling.ipynb` — Merges and cleans the three raw datasets into the final `traffic_analysis.csv` used for analysis.
-- `data_wrangling/grouped_vio.ipynb` — Adds an AI-based violation categorization column (`grouped_vio`) to the dataset for use in modelling.
-
+- `data_wrangling/grouped_vio.ipynb` — Adds an AI-based violation categorization column (`grouped_vio`) to the dataset for use in modelling. *Need to provide OpenAI API key to run this.
