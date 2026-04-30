@@ -33,10 +33,11 @@ Navigate to the `data_wrangling/` folder and run notebooks in the following orde
 1. **`data_wrangling.ipynb`**  
    - Cleans and merges all raw datasets  
    - Performs spatial joins to assign traffic stops to community areas  
+   - Outputs a cleaned dataset used for further processing  
 
 2. **`community_area_grouping.ipynb`**  
    - Aggregates the merged dataset to the **community area level**  
-   - Creates the final dataset used for modeling  
+   - Outputs the final dataset: `community_area_data.csv`, which is used for EDA and modeling  
 
 ---
 
@@ -45,14 +46,13 @@ Navigate to the `data_wrangling/` folder and run notebooks in the following orde
 Navigate to the `eda/` folder:
 
 - **`eda.ipynb`**  
-  - Performs initial exploratory data analysis on the merged dataset  
-  - Examines distributions, missingness, and relationships between variables  
-  - Provides context for understanding the structure of the data  
+  - Performs initial exploration of the dataset  
+  - Examines distributions, missingness, and variable relationships  
 
 - **`correlation_map.ipynb`**  
-  - Generates correlation matrices for community-level variables  
-  - Identifies multicollinearity between predictors  
-  - Guides selection of variables used in the final model  
+  - Uses `community_area_data.csv`  
+  - Generates correlation matrices to assess multicollinearity  
+  - Guides selection of variables for the final model  
 
 ---
 
@@ -61,9 +61,9 @@ Navigate to the `eda/` folder:
 Navigate to the `Modeling/` folder:
 
 - **`grouped_binomial_logistic.ipynb`**  
-  - Fits a grouped binomial logistic regression model using community-level data  
-  - Evaluates model fit using weighted mean absolute error (MAE)  
-  - Produces coefficient estimates and standardized coefficient plots for interpretation  
+  - Uses `community_area_data.csv` as input  
+  - Fits the grouped binomial logistic regression model  
+  - Outputs model results, performance metrics, and coefficient interpretations    
 
 ---
 
