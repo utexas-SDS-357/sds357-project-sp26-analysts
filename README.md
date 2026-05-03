@@ -15,7 +15,7 @@ This project uses three publicly available datasets:
    - Contains individual-level traffic stop records  
 
 2. **Chicago Community Areas (Shapefile)**  
-   https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Community-Areas-Map/cauq-8yn6d  
+   [https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Community-Areas-Map/cauq-8yn6d](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Community-Areas-current-/cauq-8yn6&ved=2ahUKEwjX-cWU55uUAxVCm2oFHbI4GCcQFnoECB0QAQ&usg=AOvVaw0q71WOLbUMzVIanjHzI3ZG)  
    - Used to map traffic stops to community areas  
 
 3. **Chicago Health Atlas**  
